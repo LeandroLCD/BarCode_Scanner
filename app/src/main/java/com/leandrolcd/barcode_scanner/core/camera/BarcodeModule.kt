@@ -16,9 +16,7 @@ object BarcodeModule {
     fun provideBarcode(): BarcodeScanner {
         val options = BarcodeScannerOptions.Builder()
             .setBarcodeFormats(
-                Barcode.FORMAT_QR_CODE,
-                Barcode.FORMAT_EAN_13,
-                Barcode.FORMAT_EAN_8)
+                Barcode.FORMAT_ALL_FORMATS)
             .enableAllPotentialBarcodes()
             .build()
         return BarcodeScanning.getClient(options)

@@ -3,20 +3,30 @@ package com.leandrolcd.barcode_scanner.domain
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageFormat
+import android.graphics.Matrix
+import android.graphics.Rect
+import android.graphics.YuvImage
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import android.view.Surface
 import android.widget.Toast
-import androidx.camera.core.*
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageProxy
+import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -32,9 +42,9 @@ class CameraX @Inject constructor(
     private val dispatcher: CoroutineDispatcher
 ) {
 
-    private val imageCapture = ImageCapture.Builder()
+   /* private val imageCapture = ImageCapture.Builder()
         .setTargetRotation(Surface.ROTATION_90)
-        .build()
+        .build()*/
 
     //region Methods
     fun startBarcodeScannerPreviewView(scannerImage:(image: ImageProxy)->Unit): PreviewView {
@@ -49,11 +59,11 @@ class CameraX @Inject constructor(
 
             val imageAnalysis = ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .setTargetRotation(Surface.ROTATION_90)
+                //.setTargetRotation(Surface.ROTATION_90)
                 .build()
             val preview = Preview.Builder().build().also {
-                it.targetRotation = Surface.ROTATION_90
-                it.setSurfaceProvider(previewView.surfaceProvider)
+                //it.targetRotation = Surface.ROTATION_90
+                it.surfaceProvider = previewView.surfaceProvider
             }
             val camSelector =
                 CameraSelector.Builder()
@@ -73,7 +83,7 @@ class CameraX @Inject constructor(
                     owner,
                     camSelector,
                     preview,
-                    imageCapture,
+                    //imageCapture,
                     imageAnalysis
                 )
             } catch (e: Exception) {
@@ -85,7 +95,7 @@ class CameraX @Inject constructor(
         return previewView
     }
 
-    fun startCameraPreviewView(): PreviewView {
+    /*fun startCameraPreviewView(): PreviewView {
 
         //region Properties
 
@@ -121,13 +131,17 @@ class CameraX @Inject constructor(
         }
 
         return previewView
-    }
+    }*/
 
-    fun capturePhoto() =owner.lifecycleScope.launch{
+   /* fun capturePhoto() =owner.lifecycleScope.launch{
 
 
         imageCapture.takePicture(cameraExecutors, object :
             ImageCapture.OnImageCapturedCallback(), ImageCapture.OnImageSavedCallback {
+            override fun onCaptureStarted() {
+                TODO("Not yet implemented")
+            }
+
             override fun onCaptureSuccess(image: ImageProxy) {
                 super.onCaptureSuccess(image)
                 owner.lifecycleScope.launch {
@@ -138,6 +152,10 @@ class CameraX @Inject constructor(
                 }
             }
 
+            override fun onCaptureStarted() {
+                TODO("Not yet implemented")
+            }
+
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                 showLog("onCaptureSuccess: Uri  ${outputFileResults.savedUri}")
             }
@@ -146,16 +164,29 @@ class CameraX @Inject constructor(
                 super.onError(exception)
                 showLog("onCaptureSuccess: onError")
             }
+
+            override fun onCaptureProcessProgressed(progress: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onPostviewBitmapAvailable(bitmap: Bitmap) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onPostviewBitmapAvailable(bitmap: Bitmap) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onCaptureProcessProgressed(progress: Int) {
+                TODO("Not yet implemented")
+            }
         })
 
 
-    }
+    }*/
     //endregion
 
     //region functions
-    private fun showLog(showLog: String) {
-        Log.d("Error", showLog)
-    }
 
     private suspend fun imageProxyToBitmap(image: ImageProxy): Bitmap =
         withContext(owner.lifecycleScope.coroutineContext) {
