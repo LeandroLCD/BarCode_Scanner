@@ -17,6 +17,7 @@ ksp = "2.1.0-1.0.29"
 hilt = "2.54"
 hiltNavigationCompose = "1.2.0"
 playServicesMlkitBarcodeScanning = "18.3.1"
+material = "1.12.0"
 
 [libraries]
 
@@ -66,6 +67,7 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [bundles]
 androidx-livedata = ["androidx-appcompat", "androidx-runtime-livedata", "androidx-lifecycle-process"]
@@ -80,4 +82,5 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 
