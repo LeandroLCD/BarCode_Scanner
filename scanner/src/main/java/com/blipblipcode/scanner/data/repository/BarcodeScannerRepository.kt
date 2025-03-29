@@ -18,27 +18,27 @@ internal class BarcodeScannerRepository @Inject constructor(
     private val barcodeScanning: BarcodeScanner
 ) : IBarcodeScannerRepository {
     @OptIn(ExperimentalGetImage::class)
-    override suspend fun scanningBarcode(imageProxy: ImageProxy):Result<Barcode>{
+    override suspend fun scanningBarcode(imageProxy: ImageProxy):Result<Barcode?>{
         val image = InputImage.fromMediaImage(imageProxy.image!!, imageProxy.imageInfo.rotationDegrees)
         val result = scanningBarcode(image)
         imageProxy.close()
         return result
     }
 
-    override suspend fun scanningBarcode(url: android.net.Uri):Result<Barcode>{
+    override suspend fun scanningBarcode(url: android.net.Uri):Result<Barcode?>{
         val image = InputImage.fromFilePath(context, url)
         return scanningBarcode(image)
     }
 
-    override suspend fun scanningBarcode(bitmap: Bitmap, rotationDegrees: Int):Result<Barcode>{
+    override suspend fun scanningBarcode(bitmap: Bitmap, rotationDegrees: Int):Result<Barcode?>{
         val image = InputImage.fromBitmap(bitmap, rotationDegrees)
         return scanningBarcode(image)
     }
 
-    private suspend fun scanningBarcode(image: InputImage):Result<Barcode>{
+    private suspend fun scanningBarcode(image: InputImage):Result<Barcode?>{
         return suspendCancellableCoroutine {continuation->
             barcodeScanning.process(image).addOnSuccessListener { barcodes->
-                barcodes.firstOrNull()?.let {br->
+                barcodes.firstOrNull().let {br->
                     continuation.resume(Result.success(br))
                 }
             }.addOnFailureListener {

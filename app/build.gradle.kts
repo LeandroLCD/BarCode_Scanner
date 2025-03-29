@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.leandrolcd.barcode_scanner"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 35
         versionCode = 1
         versionName = "1.0.0"
@@ -58,6 +58,8 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.bundles.androidx.livedata)
 
+    //librery
+    implementation(project(":scanner"))
 
     //camera
     implementation(libs.bundles.cameraX)

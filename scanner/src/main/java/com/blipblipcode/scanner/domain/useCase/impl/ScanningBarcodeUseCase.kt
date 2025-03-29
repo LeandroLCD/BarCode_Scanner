@@ -10,12 +10,12 @@ import javax.inject.Inject
 
 internal class ScanningBarcodeUseCase @Inject constructor(private val barcodeScannerRepository: BarcodeScannerRepository) :
     IScanningBarcodeUseCase {
-    override suspend fun invoke(imageProxy: ImageProxy): Result<Barcode> =
+    override suspend fun invoke(imageProxy: ImageProxy): Result<Barcode?> =
         barcodeScannerRepository.scanningBarcode(imageProxy)
 
-    override suspend fun invoke(url: Uri): Result<Barcode> =
+    override suspend fun invoke(url: Uri): Result<Barcode?> =
         barcodeScannerRepository.scanningBarcode(url)
 
-    override suspend fun invoke(bitmap: Bitmap, rotationDegrees: Int): Result<Barcode> =
+    override suspend fun invoke(bitmap: Bitmap, rotationDegrees: Int): Result<Barcode?> =
         barcodeScannerRepository.scanningBarcode(bitmap, rotationDegrees)
 }

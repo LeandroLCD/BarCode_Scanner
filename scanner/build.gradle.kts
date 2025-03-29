@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.serialization)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
@@ -11,7 +13,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 23
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -45,6 +47,8 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.bundles.androidx.livedata)
 
+    //Serializar json
+    implementation(libs.kotlinx.serialization.json)
 
     //camera
     implementation(libs.bundles.cameraX)
@@ -60,6 +64,10 @@ dependencies {
 
     //hilt
     implementation(libs.bundles.hilt)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
     ksp(libs.hilt.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
