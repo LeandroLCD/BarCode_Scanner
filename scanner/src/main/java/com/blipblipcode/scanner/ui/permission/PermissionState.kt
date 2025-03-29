@@ -49,9 +49,10 @@ class PermissionManager private constructor(
 
 
     private fun shouldShowRequestPermissionRationale(context: Context, perm: String): Boolean {
-        return context is android.app.Activity && context.shouldShowRequestPermissionRationale(perm)
+        return context is Activity && context.shouldShowRequestPermissionRationale(perm)
     }
 
+    @Suppress("unused")
     class Builder {
         private val permissions = mutableSetOf<String>()
 
