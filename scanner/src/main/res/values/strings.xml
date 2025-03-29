@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_cam_perms">Se requiere permisos de la Cámara, para escanear códigos de barras.</string>
+    <string name="ask_perms">Solicitar</string>
+    <string name="title_activity_scanner">ScannerActivity</string>
+</resources>
