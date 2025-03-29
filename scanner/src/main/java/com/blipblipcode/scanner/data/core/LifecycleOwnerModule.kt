@@ -1,4 +1,4 @@
-package com.leandrolcd.barcode_scanner.core.app
+package com.blipblipcode.scanner.data.core
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -16,6 +16,5 @@ object LifecycleOwnerModule {
         return ProcessLifecycleOwner.get()
 
     }
-
 
 }
