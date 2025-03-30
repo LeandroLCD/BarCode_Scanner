@@ -4,68 +4,104 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Parcelable
-import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import androidx.compose.runtime.Composable
 import androidx.core.content.ContextCompat
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.parcelize.Parcelize
-import kotlinx.serialization.Serializable
+import java.lang.ref.WeakReference
 
-@Serializable
 @Parcelize
 data class PermissionState(
     val perm: String,
-    var isGranted: Boolean = false,
-    var shouldShowRequestPermissionRationale: Boolean = true
-) : Parcelable{
-    fun checkedRequestPermission(context: Activity) {
-        if (!isGranted) {
-            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale(context, perm)
-        }
-    }
-}
+    val isGranted: Boolean,
+    val shouldShowRequestPermissionRationale: Boolean,
+    val isPermanentlyDenied: Boolean = !isGranted && !shouldShowRequestPermissionRationale
+) : Parcelable
+
 
 class PermissionManager private constructor(
     private val permissions: List<String>
 ) {
-    private val permissionStates = mutableListOf<PermissionState>()
+    private val permissionStates = mutableMapOf<String, PermissionState>()
+    private var contextRef: WeakReference<Activity>? = null
 
-    private lateinit var context: Context
+    @OptIn(ExperimentalPermissionsApi::class)
+    @Composable
+    fun rememberMultiplePermissionsState(callBack:(List<PermissionState>)->Unit) =
+        com.google.accompanist.permissions.rememberMultiplePermissionsState(permissions) { mapPerm ->
+            mapPerm.forEach {
+                updatePermissionStates(it.key, it.value)
+            }
+            callBack.invoke(permissionStates.values.toList())
+        }
 
     fun build(activity: Activity) = apply {
-        this.context = activity
+        contextRef = WeakReference(activity)
+        initializeStates()
     }
 
-    fun checkedPermissions():List<PermissionState>{
-        permissionStates.clear()
+    fun updatePermissionStates() =apply {
+        val context = contextRef?.get()
+        permissionStates.keys.forEach { perm ->
+            permissionStates[perm] = PermissionState(
+                perm = perm,
+                isGranted = checkPermissionStatus(perm, context),
+                shouldShowRequestPermissionRationale = checkRationale(perm, context)
+            )
+        }
+    }
+    fun getPermissionStates(): List<PermissionState> {
+        return permissionStates.values.toList()
+    }
 
-        permissionStates.addAll(
-            permissions.map { perm ->
-                val isGranted = ContextCompat.checkSelfPermission(context, perm) == PackageManager.PERMISSION_GRANTED
-                val shouldShowRationale = shouldShowRequestPermissionRationale(context, perm)
-                PermissionState(perm, isGranted, shouldShowRationale)
-            }
+    fun getPermissionState(permission: String): PermissionState? {
+        return permissionStates[permission]
+    }
+
+    private fun initializeStates() {
+        val context = contextRef?.get() ?: return
+        permissions.forEach { perm ->
+            permissionStates[perm] = createPermissionState(perm, context)
+        }
+    }
+
+    private fun updatePermissionStates(perm: String, isGranted: Boolean) {
+        permissionStates[perm] = PermissionState(
+            perm = perm,
+            isGranted = isGranted,
+            shouldShowRequestPermissionRationale = checkRationale(perm, contextRef?.get())
         )
-        return permissionStates
     }
 
-
-    private fun shouldShowRequestPermissionRationale(context: Context, perm: String): Boolean {
-        return context is Activity && context.shouldShowRequestPermissionRationale(perm)
+    private fun createPermissionState(perm: String, context: Activity): PermissionState {
+        return PermissionState(
+            perm = perm,
+            isGranted = checkPermissionStatus(perm, context),
+            shouldShowRequestPermissionRationale = checkRationale(perm, context)
+        )
     }
 
-    @Suppress("unused")
+    private fun checkPermissionStatus(perm: String,  context: Activity?): Boolean {
+        return context?.checkSelfPermission(perm) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun checkRationale(perm: String, context: Activity?): Boolean {
+        return context?.shouldShowRequestPermissionRationale(perm) ?: true
+    }
+
     class Builder {
         private val permissions = mutableSetOf<String>()
 
-        fun add(permission: String) = apply {
+        fun addPermission(permission: String) = apply {
             permissions.add(permission)
         }
 
-        fun addAll(vararg permissionList: String) = apply {
-            permissions.addAll(permissionList)
+        fun addAllPermissions(vararg permissions: String) = apply {
+            this.permissions.addAll(permissions)
         }
 
-        fun build(context: Activity):PermissionManager{
-           return PermissionManager(permissions.toList()).build(context)
+        fun build(activity: Activity): PermissionManager {
+            return PermissionManager(permissions.toList()).build(activity)
         }
     }
 }

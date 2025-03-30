@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.blipblipcode.scanner.ui.camera.CameraScreen
 import com.blipblipcode.scanner.ui.permission.PermissionManager
@@ -34,16 +36,17 @@ class ScannerActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        permissionManager = PermissionManager.Builder()
-            .add(permission.CAMERA)
+        permissionManager = PermissionManager
+            .Builder()
+            .addPermission(permission.CAMERA)
             .build(this)
 
         setContent {
             BarCode_ScannerTheme {
                 val permissionStates = rememberSaveable {
-                    permissionManager.checkedPermissions()
+                    permissionManager.getPermissionStates()
                 }
-                var permissionGranted = remember {
+                var permissionGranted by remember {
                     mutableStateOf(permissionStates.all { it.isGranted })
                 }
 
@@ -51,7 +54,7 @@ class ScannerActivity : ComponentActivity() {
                     Box(Modifier
                         .fillMaxSize()
                         .padding(innerPadding)) {
-                        if (permissionGranted.value) {
+                        if (permissionGranted) {
 
                             CameraScreen(onException = {
                                 resultIntent.putExtra(EXTRA_ERROR, it.message)
@@ -67,7 +70,7 @@ class ScannerActivity : ComponentActivity() {
                             }
                         }else{
                             PermissionsScreen(permissionManager){
-                                permissionGranted = mutableStateOf(true)
+                                permissionGranted = true
                             }
                         }
 
