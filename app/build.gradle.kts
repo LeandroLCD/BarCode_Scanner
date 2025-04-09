@@ -59,7 +59,8 @@ dependencies {
     implementation(libs.bundles.androidx.livedata)
 
     //librery
-    implementation(project(":scanner"))
+   // implementation(project(":scanner"))
+    implementation(libs.barcode.scanner)
 
     //camera
     implementation(libs.bundles.cameraX)

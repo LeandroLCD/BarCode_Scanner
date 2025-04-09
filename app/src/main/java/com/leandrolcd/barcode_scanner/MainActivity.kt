@@ -14,7 +14,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.blipblipcode.scanner.ui.utilities.ACTION_BARCODE_SCAN
@@ -32,15 +35,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val scope = rememberCoroutineScope()
+            val barcodeScanner = remember { mutableStateOf("") }
             val scanActivity = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { onResult->
                 if (onResult.resultCode == RESULT_OK) {
                     onResult.data?.also {
                         val barcode = it.getStringExtra(EXTRA_BARCODE)
                         val barcodeType = it.getStringExtra(EXTRA_BARCODE_TYPE)
+                        barcodeScanner.value = "$barcode, $barcodeType"
+
                         Log.d("scanActivity", "scan barcode: $barcode, $barcodeType")
                     }
                 }else{
-                    Log.d("scanActivity","scan barcode: ${onResult.data?.getStringExtra(EXTRA_ERROR)}")
+                    Log.d("scanActivity","barcode error: ${onResult.data?.getStringExtra(EXTRA_ERROR)}")
                 }
 
             }
@@ -58,6 +64,7 @@ class MainActivity : ComponentActivity() {
                         } ) {
                             Text("SCAN")
                         }
+                        Text(barcodeScanner.value, modifier = Modifier.align(Alignment.BottomCenter))
                     }
                 }
 
