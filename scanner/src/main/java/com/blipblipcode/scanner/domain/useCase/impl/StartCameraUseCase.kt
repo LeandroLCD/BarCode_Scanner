@@ -8,6 +8,6 @@ import javax.inject.Inject
 
 internal class StartCameraUseCase @Inject constructor(private val repository: ICameraRepository) :
     IStartCameraUseCase {
-    override fun invoke(recognizerImage: (ImageProxy) -> Unit): PreviewView = repository.startCameraPreviewView(recognizerImage)
+    override fun invoke(recognizerImage: (ImageProxy) -> Unit) = repository.startCameraPreviewView(recognizerImage)
 
 }

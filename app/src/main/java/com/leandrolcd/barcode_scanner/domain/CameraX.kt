@@ -88,7 +88,6 @@ class CameraX @Inject constructor(
                 )
             } catch (e: Exception) {
                 e.printStackTrace()
-                Log.d("TAG", "CameraX: $e")
             }
         }
 

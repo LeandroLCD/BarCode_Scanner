@@ -4,5 +4,5 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.view.PreviewView
 
 interface IStartCameraUseCase {
-    operator fun invoke(recognizerImage:(ImageProxy)->Unit): PreviewView
+    operator fun invoke(recognizerImage:(ImageProxy)->Unit): Result<PreviewView>
 }

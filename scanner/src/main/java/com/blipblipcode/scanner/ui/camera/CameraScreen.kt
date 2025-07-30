@@ -4,8 +4,12 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -26,6 +30,7 @@ import com.blipblipcode.scanner.ui.component.CameraXScreen
 @Composable
 internal fun CameraScreen(modifier: Modifier = Modifier,
                           viewModel: CameraViewModel = hiltViewModel(),
+                          onClosed: () -> Unit,
                           onException: (Throwable) -> Unit,
                           onComplete: (String, String) -> Unit) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -42,7 +47,13 @@ internal fun CameraScreen(modifier: Modifier = Modifier,
         is CameraUiState.Exception -> onException(ue.cause)
         is CameraUiState.Scanning ->{
             AnimatedVisibility(preview != null) {
-                CameraXScreen(preview!!, modifier) {
+                CameraXScreen(preview!!, modifier, onClosed = {
+                    IconButton(onClick = {
+                        onClosed.invoke()
+                    }){
+                        Icon(Icons.Default.Close, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                    }
+                }) {
                     AnimatedVisibility(barcode.isNotBlank()) {
                         TextButton(onClick = {
                             onComplete.invoke(barcode, barcodeType)

@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 
 @Composable
-fun ScannerFacade(modifier: Modifier = Modifier.fillMaxSize()){
+fun ScannerFacade(modifier: Modifier = Modifier){
 
     val animation = rememberInfiniteTransition(label = "animation")
     val showLine by animation.animateValue(
@@ -40,7 +40,7 @@ fun ScannerFacade(modifier: Modifier = Modifier.fillMaxSize()){
         )
     )
     val colorBorder = MaterialTheme.colorScheme.primary
-    Canvas(modifier = modifier
+    Canvas(modifier = modifier.fillMaxSize()
         .graphicsLayer {
             compositingStrategy = CompositingStrategy.Offscreen
         }) {

@@ -28,25 +28,29 @@ internal class CameraViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<CameraUiState>(CameraUiState.Idle)
     val uiState = _uiState.asStateFlow()
 
+    private val _errorException:MutableStateFlow<Throwable?> = MutableStateFlow(null)
+    val errorException = _errorException.asStateFlow()
+
     /*EVENT*/
     fun startCamera(onComplete: (String, String) -> Unit) {
-        _preview.update {
-            startCameraUseCase.get().invoke { imageProxy ->
-                viewModelScope.launch {
-                    scanningBarcodeUseCase.get().invoke(imageProxy)
-                        .onSuccess {br->
-                            br?.let{
-                                Log.d("scanActivity", "startCamera: $it")
-                                onComplete(it.displayValue.orEmpty(), getType(it.format))
-                            }
-
-                        }.onFailure {
-                            _uiState.tryEmit(CameraUiState.Exception(it))
+        startCameraUseCase.get().invoke { imageProxy ->
+            viewModelScope.launch {
+                scanningBarcodeUseCase.get().invoke(imageProxy)
+                    .onSuccess {br->
+                        br?.let{
+                            onComplete(it.displayValue.orEmpty(), getType(it.format))
                         }
-                }
+
+                    }.onFailure {
+                        _errorException.tryEmit(it)
+                    }
             }
+        }.onSuccess { previewView ->
+            _preview.tryEmit(previewView)
+            _uiState.tryEmit(CameraUiState.Scanning )
+        }.onFailure {
+            _uiState.tryEmit(CameraUiState.Exception(it))
         }
-        _uiState.tryEmit(CameraUiState.Scanning )
     }
 
     private fun getType(format: Int): String {

@@ -42,6 +42,7 @@ internal class BarcodeScannerRepository @Inject constructor(
                     continuation.resume(Result.success(br))
                 }
             }.addOnFailureListener {
+                it.printStackTrace()
                 continuation.resume(Result.failure(it))
             }
         }

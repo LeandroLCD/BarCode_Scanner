@@ -5,6 +5,7 @@ import androidx.annotation.RequiresPermission
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,6 +16,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 @Composable
 fun CameraXScreen(preview: PreviewView,
                   modifier: Modifier = Modifier,
+                  onClosed: @Composable RowScope.() -> Unit ={},
                   facadeScreen: @Composable ()->Unit ={
                       ScannerFacade()
                   },
@@ -28,6 +30,9 @@ fun CameraXScreen(preview: PreviewView,
             }
         )
         facadeScreen()
+        Row(Modifier.align(Alignment.TopEnd)) {
+            onClosed.invoke(this)
+        }
         Row(modifier.align(Alignment.BottomCenter)) {
             buttonContent.invoke()
         }

@@ -2,7 +2,6 @@ package com.blipblipcode.scanner.data.repository
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
@@ -26,40 +25,42 @@ internal class CameraRepository @Inject constructor(
     private val cameraExecutors: ExecutorService
 ) : ICameraRepository {
 
-    companion object{
+    companion object {
         private var imageCapture = mutableStateOf<ImageCapture?>(null)
     }
 
-    override fun startCameraPreviewView(recognizerImage:(ImageProxy)->Unit): PreviewView {
+    override fun startCameraPreviewView(recognizerImage: (ImageProxy) -> Unit): Result<PreviewView> {
 
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
         val previewView = PreviewView(context)
-        previewView.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+        return try {
+            previewView.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
 
-            val preview = Preview.Builder().build().also {
-                //it.targetRotation = Surface.ROTATION_90
-                it.surfaceProvider = previewView.surfaceProvider
-            }
+                val preview = Preview.Builder().build().also {
+                    //it.targetRotation = Surface.ROTATION_90
+                    it.surfaceProvider = previewView.surfaceProvider
+                }
 
-            val imageAnalysis = ImageAnalysis.Builder()
-                //.setTargetRotation(Surface.ROTATION_90)
-                .build()
+                val imageAnalysis = ImageAnalysis.Builder()
+                    //.setTargetRotation(Surface.ROTATION_90)
+                    .build()
 
-            imageAnalysis.setAnalyzer(cameraExecutors) { imageProxy ->
-                recognizerImage(imageProxy)
-            }
+                imageAnalysis.setAnalyzer(cameraExecutors) { imageProxy ->
+                    recognizerImage(imageProxy)
+                }
 
-            imageCapture.value = ImageCapture.Builder()
-                //.setTargetAspectRatio(RATIO_4_3)
-                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                .setJpegQuality(100)
-                .build()
+                imageCapture.value = ImageCapture.Builder()
+                    //.setTargetAspectRatio(RATIO_4_3)
+                    .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                    .setJpegQuality(100)
+                    .build()
 
 
-            val camSelector =
-                CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
+                val camSelector =
+                    CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                        .build()
 
-            try {
+
                 cameraProviderFuture.get().unbindAll()
                 cameraProviderFuture.get().bindToLifecycle(
                     owner,
@@ -68,15 +69,16 @@ internal class CameraRepository @Inject constructor(
                     preview,
                     imageCapture.value
                 )
-            } catch (e: Exception) {
-                Log.d("CameraRepository", e.toString())
             }
+            Result.success(previewView)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
-        return previewView
     }
 
+
     override fun takePhoto(onCaptureSuccess: (Bitmap) -> Unit) {
-        owner.lifecycleScope.launch{
+        owner.lifecycleScope.launch {
             imageCapture.value?.takePicture(
                 ContextCompat.getMainExecutor(context),
                 object : ImageCapture.OnImageCapturedCallback() {
@@ -89,7 +91,6 @@ internal class CameraRepository @Inject constructor(
                 })
         }
     }
-
 
 
 }
