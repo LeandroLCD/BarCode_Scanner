@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace  = "com.leandrolcd.barcode_scanner"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.leandrolcd.barcode_scanner"
         minSdk = 23
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0.0"
 

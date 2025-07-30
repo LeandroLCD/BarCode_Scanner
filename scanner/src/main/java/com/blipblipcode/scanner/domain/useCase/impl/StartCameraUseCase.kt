@@ -1,9 +1,8 @@
 package com.blipblipcode.scanner.domain.useCase.impl
 
 import androidx.camera.core.ImageProxy
-import androidx.camera.view.PreviewView
-import com.blipblipcode.scanner.domain.useCase.IStartCameraUseCase
 import com.blipblipcode.scanner.domain.ICameraRepository
+import com.blipblipcode.scanner.domain.useCase.IStartCameraUseCase
 import javax.inject.Inject
 
 internal class StartCameraUseCase @Inject constructor(private val repository: ICameraRepository) :
