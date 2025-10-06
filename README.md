@@ -1,5 +1,5 @@
 # 📱 Barcode Scanner Library
-[![](https://jitpack.io/v/LeandroLCD/DateTime.svg)](https://jitpack.io/#LeandroLCD/BarCode_Scanner)
+[![](https://jitpack.io/v/LeandroLCD/BarCode_Scanner.svg)](https://jitpack.io/#LeandroLCD/BarCode_Scanner)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/LeandroLCD/BarCode_Scanner)
 ![GitHub last commit](https://img.shields.io/github/last-commit/LeandroLCD/BarCode_Scanner)
 ![GitHub issues](https://img.shields.io/github/issues/LeandroLCD/BarCode_Scanner)
