@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-internal class CameraViewModel @Inject constructor(
+class CameraViewModel @Inject constructor(
     private val scanningBarcodeUseCase: dagger.Lazy<IScanningBarcodeUseCase>,
     private val startCameraUseCase: dagger.Lazy<IStartCameraUseCase>
 ) : ViewModel() {

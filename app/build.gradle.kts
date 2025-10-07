@@ -44,14 +44,12 @@ android {
             freeCompilerArgs.add("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
         }
     }
-    buildFeatures {
-        compose =  true
-    }
 
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
             excludes += "META-INF/gradle/incremental.annotation.processors"
+            excludes += "META-INF/LICENSE.md"
         }
     }
 }
@@ -81,6 +79,7 @@ dependencies {
 
     //hilt
     implementation(libs.bundles.hilt)
+    implementation(libs.androidx.junit.ktx)
     ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)
