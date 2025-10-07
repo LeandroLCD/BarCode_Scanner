@@ -1,4 +1,4 @@
-name: Scanner Tests
+name: Scanner Tests Work-Flow
 
 on:
   push:
