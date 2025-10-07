@@ -4,6 +4,7 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/LeandroLCD/BarCode_Scanner)
 ![GitHub issues](https://img.shields.io/github/issues/LeandroLCD/BarCode_Scanner)
 ![Tests](https://img.shields.io/badge/tests-passing-brightgreen)
+[![Scanner Tests](https://github.com/LeandroLCD/BarCode_Scanner/actions/workflows/scanner_flow.yml/badge.svg)](https://github.com/LeandroLCD/BarCode_Scanner/actions/workflows/scanner_flow.yml)
 
 Una librería modular para **escaneo de códigos de barras en Android**, diseñada con **arquitectura limpia**, **corutinas** y **Jetpack Compose**.  
 Proporciona utilidades para **captura de cámara**, **detección de códigos**, **toma de fotos** y **gestión de permisos**.
