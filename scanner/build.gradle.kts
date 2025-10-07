@@ -75,22 +75,25 @@ dependencies {
 
     //hilt
     implementation(libs.bundles.hilt)
-    implementation(libs.androidx.runner)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
     ksp(libs.hilt.compiler)
 
     // Test dependencies
-    testImplementation(libs.junit)
+    implementation(libs.androidx.runner)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
     // MockK
     testImplementation(libs.mockk)
+    testImplementation(libs.junit)
+
     // Kotlin Coroutines Test
     testImplementation(libs.kotlinx.coroutines.test)
+
+    androidTestImplementation(libs.bundles.mockito)
 
     androidTestImplementation(libs.hilt.android.testing)
     kspAndroidTest(libs.hilt.compiler)

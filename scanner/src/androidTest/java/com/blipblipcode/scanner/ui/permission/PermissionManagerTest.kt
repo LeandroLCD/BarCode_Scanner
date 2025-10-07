@@ -10,7 +10,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.PermissionState as AccompanistPermissionState
 import com.google.accompanist.permissions.PermissionStatus
 import org.mockito.ArgumentMatchers.anyString
@@ -23,9 +22,6 @@ class PermissionManagerTest {
 
     @Mock
     private lateinit var mockActivity: Activity
-
-    @Mock
-    private lateinit var mockAccompanistMultiplePermissionsState: MultiplePermissionsState
 
     @Before
     fun setup() {

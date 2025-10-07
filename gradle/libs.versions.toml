@@ -91,6 +91,7 @@ androidx-compose = ["androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling"
 androidx-uiMaterial = ["androidx-material3", "androidx-icons-core", "androidx-icons-extended", "constraintlayout-compose"]
 hilt = ["androidx-hilt-navigation-compose", "hilt-android"]
 cameraX = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-view", "androidx-camera-lifecycle", "androidx-camera-extensions"]
+mockito = ["mockito-android", "mockito-core"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
