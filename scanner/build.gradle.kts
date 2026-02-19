@@ -58,7 +58,6 @@ dependencies {
 
     //Serializar json
     implementation(libs.kotlinx.serialization.json)
-
     implementation(libs.google.accompanist.permissions)
 
     //camera
